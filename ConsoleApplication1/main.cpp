@@ -65,6 +65,7 @@ void showSvmParams(cv::SVMParams svm_param){
 		<< std::endl;
 }
 
+//csvからトレーニングデータとラベルを読み込み
 void setTrainingData(const std::string filename, cv::Mat& trainingData, cv::Mat& trainingLabels){
 
 	std::vector<std::vector<std::string>> csvFileData;
@@ -121,7 +122,8 @@ void setTrainingData(std::vector<std::vector<std::string>> csvFileData, cv::Mat&
 
 }
 
-void checkSVMResult(const cv::SVM& svm_predict, const std::string& checkFilesCSV){
+//引数のsvmパラメータでcsvファイル内の特徴から推定
+void checkSVMResult(const cv::SVM& svm, const std::string& checkFilesCSV){
 	std::vector<std::vector<std::string>> csvFileData;
 	csvFileData = my_csv_import(checkFilesCSV);
 	const int CHECK_DATA_COUNT = csvFileData.size();//全データ個数
@@ -139,9 +141,9 @@ void checkSVMResult(const cv::SVM& svm_predict, const std::string& checkFilesCSV
 		}
 		float truenum = atof(csvFileData.at(i).at(0).c_str());
 		std::cout << std::endl
-			<< "SVM診断結果:" << svm_predict.predict(result)
+			<< "SVM診断結果:" << svm.predict(result)
 			<< "真値:" << truenum
-			<< "真値との比較:" << ((svm_predict.predict(result)==truenum)?"true":"false");
+			<< "真値との比較:" << ((svm.predict(result)==truenum)?"true":"false");
 	}
 }
 
@@ -181,6 +183,7 @@ CvSVMParams readSVMParam(const std::string filename){
 	return svm_param;
 }
 
+//学習データから,trainautoした結果(svmの学習結果,パラメータ)を書き出す
 void mySVMTrainautoLearn(const std::string kTrainautoLearnedSVMxmlFileName, const std::string kTrainautoParamxmlFileName,const std::string kTrainingDatacsvFileName){
 	cv::Mat trainingData;//特徴点データ
 	cv::Mat trainingLabels;//ラベル
